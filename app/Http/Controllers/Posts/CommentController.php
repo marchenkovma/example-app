@@ -42,9 +42,9 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($post, $comment)
     {
-        //
+        return "Page with post: {$post} and comment: {$comment} to edit a comment";
     }
 
     /**
