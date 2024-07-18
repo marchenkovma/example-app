@@ -5,25 +5,28 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Posts\CommentController;
 use App\Http\Controllers\Posts\TestController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Middleware\MyLogMiddleware;
 use Illuminate\Support\Facades\Route;
 
-/*Route::get('/', function () {
+Route::get('/', function () {
     return view('welcome');
-});*/
+});
 
-Route::view('/', 'welcome')->name('home');
+Route::view('/', 'home.index')->name('home');
 
 Route::redirect('/home', '/')->name('home.redirect');
 
 // Контроллер может быть без метода, тогда используйте магический метод __invoke
-Route::get('/test', TestController::class)->name('test')->middleware('guest');
+// middleware('throttle:10') - 10 запросов в минуту
+// middleware('throttle:10,60') - 10 запросов в час
+Route::get('/test', TestController::class)->name('test');
 
-Route::get('/register', [RegisterController::class, 'index'])->name('register');
-Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisterController::class, 'index'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-Route::get('/login', [loginController::class, 'index'])->name('login');
-Route::post('/login', [loginController::class, 'store'])->name('login.store');
+    Route::get('/login', [loginController::class, 'index'])->name('login');
+    Route::post('/login', [loginController::class, 'store'])->name('login.store');
+});
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
@@ -32,7 +35,7 @@ Route::post('/blog/{post}/like', [BlogController::class, 'like'])->name('blog.li
 //Route::get('/login/{user}/confirmation', [loginController::class, 'confirmation'])->name('login.confirmation');
 //Route::post('/login/{user}/confirm', [loginController::class, 'confirm'])->name('login.confirm');
 
-Route::resource('/posts/{post}/comments', CommentController::class)->only(['index', 'show']);
+Route::resource('/posts/{post}/comments', CommentController::class);
 
 //Route::fallback(function () {
 //    return 'Page not found (fallback)';

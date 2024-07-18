@@ -3,13 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use function Laravel\Prompts\error;
-
-class LogMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,8 +15,18 @@ class LogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        info($request->url(), $request->all());
+        if($this->isAdmin($request)) {
+            echo 'Admin' . "</br>";
 
-        return $next($request);
+            return $next($request);
+        }
+
+        abort(403);
+    }
+
+    protected function isAdmin(Request $request)
+    {
+        //return $request->user()->admin;
+        return true;
     }
 }

@@ -7,9 +7,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use function Laravel\Prompts\error;
-
-class LogMiddleware
+class ActiveMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,8 +16,14 @@ class LogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        info($request->url(), $request->all());
+        if (false) {
+            echo 'Active' . "</br>";
+        } else {
+            echo 'No active' . "</br>";
+        }
 
         return $next($request);
+
+        //abort(403);
     }
 }

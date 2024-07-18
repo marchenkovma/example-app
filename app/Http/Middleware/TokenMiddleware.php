@@ -3,13 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use function Laravel\Prompts\error;
-
-class LogMiddleware
+class TokenMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,7 +15,12 @@ class LogMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        info($request->url(), $request->all());
+
+        //abort(403);
+        abort(404);
+
+        //abort_if(1 > 2, 403);
+        //abort_unless(3 > 2, 404);
 
         return $next($request);
     }
